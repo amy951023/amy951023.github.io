@@ -1,57 +1,53 @@
 // 定義變數
 let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d");
-let x = 0, y = 0, dx = 10, dy = 10, r = 30, color = "#84C1FF";
-let canMove=0;
+let x1 = 0, y1 = 0, dx1 = 5, dy1 = 5, r1 = 30, color1 = "#FFD2D2";
+let x2 =canvas.width , y2 = 0, dx2 = 8, dy2 = 6, r2 = 20, color2 = "#E6CAFF";
+let x3 =canvas.width , y3 = canvas.height, dx3 = 8, dy3 = 6, r3 = 50, color3 = "#84C1FF";
+
 
 // 畫圓形
-function drawBall() 
+function drawBall(x, y, r, color)
 {
-	ctx.beginPath();
-	ctx.arc(x, y, r, 0, Math.PI*2); // arc(圓心x, 圓心y, 半徑, 起始角, 結束角)
-	ctx.fillStyle = color;
-	ctx.fill();
-	ctx.closePath();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2); // arc(圓心x, 圓心y, 半徑, 起始角, 結束角)
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.closePath();
 }
-
-// 按下按鍵時觸發
-document.addEventListener("keydown", keyDownHandler);
-function keyDownHandler(e) 
-{
-	if(e.key == "ArrowRight")        x += dx;
-	else if(e.key == "ArrowLeft")    x -= dx;
-    else if(e.key == "ArrowUp")      y -= dy;
-	else if(e.key == "ArrowDown")    y += dy;
-}
-document.addEventListener("mousemove", mouseHandler);
-function mouseHandler(e)
-{   
-    if(canMove)
-	{x=e.clientX-canvas.offsetLeft;
-	y=e.clientY-canvas.offsetTop;
-	}
-}
-document.addEventListener("mousedown", mousedownHandler);
-document.addEventListener("mouseup", mouseupHandler);
-function mousedownHandler(e)
-{
-	canMove=1;
-}
-function mouseupHandler(e)
-{
-	canMove=0;
-}
-
-// TODO: 滑鼠移動(mousemove)時觸發，改變位置(x, y)為滑鼠目前位置(e.clientX, e.clientY)
-// ...
-
-
 
 // 更新畫布
-function draw() 
-{	
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBall();
+function draw()
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    x1 = x1 + dx1;
+    y1 = y1 + dy1;
+	
+	x2 = x2 + dx2;
+    y2 = y2 + dy2;
+	
+	x3 = x3 + dx3;
+    y3 = y3 + dy3;
+
+    // TODO: 如果發生碰撞(畫布寬canvas.width, 畫布高canvas.height)，則改變速度(dx, dy)和顏色(color)
+    // ...
+	if(x1<0||x1>canvas.width)   dx1=-dx1;
+	if(y1<0||y1>canvas.height)   dy1=-dy1;
+    if(x2<0||x2>canvas.width)   dx2=-dx2;
+	if(y2<0||y2>canvas.height)   dy2=-dy2;
+	if(x3<0||x3>canvas.width)   dx3=-dx3;
+	if(y3<0||y3>canvas.height)   dy3=-dy3;
+	if((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)<=(r1+r2)*(r1+r2))   [dx1,dy1,dx2,dy2]=[dx2,dy2,dx1,dy1];
+	if((x3-x2)*(x3-x2)+(y3-y2)*(y3-y2)<=(r3+r2)*(r3+r2))   [dx3,dy3,dx2,dy2]=[dx2,dy2,dx3,dy3];
+	if((x1-x3)*(x1-x3)+(y1-y3)*(y1-y3)<=(r1+r3)*(r1+r3))   [dx1,dy1,dx3,dy3]=[dx3,dy3,dx1,dy1];
+	
+	
+	
+
+    drawBall(x1, y1, r1, color1);
+	drawBall(x2, y2, r2, color2);
+	drawBall(x3, y3, r3, color3);
     requestAnimationFrame(draw);
 }
 draw();
