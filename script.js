@@ -1,9 +1,8 @@
 // 定義變數
 let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d");
-let x1 = 0, y1 = 0, dx1 = 5, dy1 = 5, r1 = 30, color1 = "#FFD2D2";
-let x2 =canvas.width , y2 = 0, dx2 = 8, dy2 = 6, r2 = 20, color2 = "#E6CAFF";
-let x3 =canvas.width , y3 = canvas.height, dx3 = 8, dy3 = 6, r3 = 50, color3 = "#84C1FF";
+let x =[0,canvas.width,canvas.height] ,y =[0,0,0], dx = [5,5,5], dy =[5,5,5] ,r = [30,30,30] ,color = ["#FFD2D2","#E6CAFF","#CECEFF	"];
+N=3;
 
 
 // 畫圓形
@@ -20,34 +19,43 @@ function drawBall(x, y, r, color)
 function draw()
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for(let i=0;i<N;++i)
+   {    
+     x[i] = x[i] + dx[i];
+     y[i] = y[i] + dy[i];
+   }
 
-    x1 = x1 + dx1;
-    y1 = y1 + dy1;
-	
-	x2 = x2 + dx2;
-    y2 = y2 + dy2;
-	
-	x3 = x3 + dx3;
-    y3 = y3 + dy3;
+
 
     // TODO: 如果發生碰撞(畫布寬canvas.width, 畫布高canvas.height)，則改變速度(dx, dy)和顏色(color)
     // ...
-	if(x1<0||x1>canvas.width)   dx1=-dx1;
-	if(y1<0||y1>canvas.height)   dy1=-dy1;
-    if(x2<0||x2>canvas.width)   dx2=-dx2;
-	if(y2<0||y2>canvas.height)   dy2=-dy2;
-	if(x3<0||x3>canvas.width)   dx3=-dx3;
-	if(y3<0||y3>canvas.height)   dy3=-dy3;
-	if((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)<=(r1+r2)*(r1+r2))   [dx1,dy1,dx2,dy2]=[dx2,dy2,dx1,dy1];
-	if((x3-x2)*(x3-x2)+(y3-y2)*(y3-y2)<=(r3+r2)*(r3+r2))   [dx3,dy3,dx2,dy2]=[dx2,dy2,dx3,dy3];
-	if((x1-x3)*(x1-x3)+(y1-y3)*(y1-y3)<=(r1+r3)*(r1+r3))   [dx1,dy1,dx3,dy3]=[dx3,dy3,dx1,dy1];
-	
-	
-	
+for(let i=0;i<N;++i)
+    {
+        if(x[i]<0||x[i]>canvas.width)   dx[i]=-dx[i];
+        if(y[i]<0||y[i]>canvas.height)   dy[i]=-dy[i];
+    }
+   
 
-    drawBall(x1, y1, r1, color1);
-	drawBall(x2, y2, r2, color2);
-	drawBall(x3, y3, r3, color3);
+
+for(let i=0;i<N;++i)
+  {   
+for(let j=i+1;j<N;++j)
+  
+   if((x[i]-x[j])*(x[i]-x[j])+(y[i]-y[j])*(y[i]-y[j])<=(r[i]+r[j])*(r[i]+r[j]))
+   {
+        [dx[i],dx[j]]=[dx[j],dx[i]];
+        [dy[i],dy[j]]=[dy[j],dy[i]];
+       
+   }
+  }
+
+
+
+   for(let i=0;i<N;++i)
+   { 
+     drawBall(x[i], y[i], r[i], color[i]);
+   }
+
     requestAnimationFrame(draw);
 }
 draw();
